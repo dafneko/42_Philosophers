@@ -39,9 +39,9 @@ typedef struct s_philo
 {
     t_ll start_time;       // 8 bytes
     t_ll last_meal_ms;     // 8 bytes
-    t_args *arg;           // 8 bytes on 64-bit systems
     t_mutex *right_fork;   // 8 bytes on 64-bit systems
     t_mutex *left_fork;    // 8 bytes on 64-bit systems
+    t_args arg;            // 20 bytes
     t_mutex logger;        // Size depends on the system (assuming 40 bytes)
     t_mutex end;           // Size depends on the system (assuming 40 bytes)
     int id;                // 4 bytes
