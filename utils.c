@@ -52,4 +52,6 @@ int parse_params(char *str, int *ms)
 	return (EXIT_SUCCESS);
 }
 
+
+
 // logging life updates
