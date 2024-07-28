@@ -39,16 +39,12 @@ int parse_params(char *str, int *ms)
 		if (is_digit(str[idx]))
 		{
 			nbr = nbr * 10 + (str[idx] - '0');
-		printf("nbr = %i\n", nbr);
-	
-
 		}
 		else
 			return (EXIT_FAILURE);
 		idx++;
 	}
 	*ms = nbr;
-	printf("nbr = %i\n", nbr);
 	return (EXIT_SUCCESS);
 }
 
