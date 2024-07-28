@@ -1,0 +1,4 @@
+/*
+    spawn philos, maybe recursively
+
+*/
