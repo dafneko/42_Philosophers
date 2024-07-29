@@ -1,0 +1,41 @@
+int init_philo(t_philo *philo, t_args *args, int id, t_mutex *other_fork)
+{
+	initialize right fork;
+	left fork = NULL;
+
+
+
+}
+
+//start lifetime
+int birth_philos(t_philo all_philos, first philo, args)
+{
+	pthread_t thread[args.philo_count];
+	t_philo next_philo;
+	t_philo *cur_philo;
+	
+	//t_thread cur_thread;
+
+	int idx;
+	idx = 0;
+	cur_philo = first_philo;
+	while(idx < args.philo_count)
+	{
+		if (idx + 1 == args.philo_count)
+			cur_philo.left_fork = all_philos[0].right_fork;
+		else
+		{
+
+		init_philo(&next_philo, id = idx + 1);
+		cur_philo.left_fork = next_philo.right_fork;
+		all_philos[cur_philo.id] = cur_philo;
+		pthread_create(thread + idx, cur_philo, &routine);
+		cur_philo = next_philo;
+		}
+		pthread join cur thread;
+		idx++;
+	}
+
+
+
+}

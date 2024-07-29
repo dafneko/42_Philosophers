@@ -11,12 +11,9 @@ int main(int ac, char **argv)
 
     // check args
 	if (check_arg(ac, argv, &arg) == EXIT_FAILURE)
-	{
-		// printf("ret of func = %i\n", check_arg(ac, argv, &arg));
-		// TO DO: FREE ALL MEMORY
 		return (EXIT_FAILURE);
-	}
     // start simulation
+	start_lifetime(&arg);
     //monitor death or full philos
 	return (EXIT_SUCCESS);
 }

@@ -22,7 +22,7 @@ static int is_digit(int c)
 	return ('0' <= c && '9' >= c);
 }
 
-int parse_params(char *str, int *ms)
+int parse_arguments(char *str, int *ms)
 {
 	int nbr;
 	int idx;
@@ -35,11 +35,8 @@ int parse_params(char *str, int *ms)
 		idx++;
 	while (str[idx])
 	{
-		printf("str[idx] = %c\n", str[idx]);
 		if (is_digit(str[idx]))
-		{
 			nbr = nbr * 10 + (str[idx] - '0');
-		}
 		else
 			return (EXIT_FAILURE);
 		idx++;
