@@ -46,5 +46,11 @@ int parse_arguments(char *str, int *ms)
 }
 
 
+t_ll look_at_clock(void)
+{
+	struct timeval clock;
 
+	gettimeofday(&clock, NULL);
+	return(clock.tv_sec * 1000 + clock.tv_usec / 1000);
+}
 // logging life updates

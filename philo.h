@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 
 #define INT_MAX 2147483647
 #define INT_MAX_LEN 9
@@ -53,3 +54,4 @@ typedef struct s_philo
 int parse_arguments(char *str, int *ms);
 int check_arg(int ac, char **argv, t_args *arg);
 int start_lifetime(t_args *args);
+t_ll look_at_clock(void);
