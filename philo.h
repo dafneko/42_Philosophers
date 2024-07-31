@@ -9,6 +9,10 @@
 #define INT_MAX_LEN 9
 #define ERROR -1
 
+#define ALIVE 0
+#define DEAD 1
+#define NO_MEALS_LEFT 2
+
 
 typedef long long t_ll;
 typedef pthread_mutex_t t_mutex;
@@ -26,7 +30,7 @@ typedef enum e_bool {
 
 // };
 
-
+ 
 typedef struct s_arguments
 {
 	int philo_count;
@@ -43,10 +47,10 @@ typedef struct s_philo
     t_mutex right_fork;   // 8 bytes on 64-bit systems
     t_mutex *left_fork;    // 8 bytes on 64-bit systems
     t_args arg;            // 20 bytes
-    t_mutex logger;        // Size depends on the system (assuming 40 bytes)
-    t_mutex end;           // Size depends on the system (assuming 40 bytes)
+    t_mutex logger_mtx;        // Size depends on the system (assuming 40 bytes)
+    t_mutex end_mtx;           // Size depends on the system (assuming 40 bytes)
     int id;                // 4 bytes
-    t_bool end_sig;        // 4 bytes (since it's an enum)
+    int end_sig;        // 4 bytes (since it's an enum)
     // int left_meals;        // 4 bytes
 } t_philo;
 
