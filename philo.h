@@ -11,8 +11,12 @@
 
 #define ALIVE 0
 #define DEAD 1
-#define NO_MEALS_LEFT 2
+#define THINK 2
+#define EAT 3
+#define SLEEP 4
 
+#define RIGHTIE 0
+#define LEFTIE 1
 
 typedef long long t_ll;
 typedef pthread_mutex_t t_mutex;
@@ -31,14 +35,19 @@ typedef enum e_bool {
 // };
 
  
-typedef struct s_arguments
+typedef struct s_data
 {
 	int philo_count;
 	int time_to_die;
 	int time_to_eat;
 	int time_to_sleep;
 	int left_meals;
-} t_args;
+	t_ll eat_micro;
+	t_ll sleep_micro;
+	t_mutex *logger_mtx;
+	t_mutex *end_mtx;
+	int *sig;
+} t_data;
 
 typedef struct s_philo
 {
@@ -46,16 +55,18 @@ typedef struct s_philo
     t_ll last_meal_time;     // 8 bytes
     t_mutex right_fork;   // 8 bytes on 64-bit systems
     t_mutex *left_fork;    // 8 bytes on 64-bit systems
-    t_args arg;            // 20 bytes
-    t_mutex logger_mtx;        // Size depends on the system (assuming 40 bytes)
-    t_mutex end_mtx;           // Size depends on the system (assuming 40 bytes)
+    t_data arg;            // 20 bytes
     int id;                // 4 bytes
-    int end_sig;        // 4 bytes (since it's an enum)
+    int *end_sig;        // 4 bytes (since it's an enum)
     // int left_meals;        // 4 bytes
 } t_philo;
 
 /* parse */
 int parse_arguments(char *str, int *ms);
-int check_arg(int ac, char **argv, t_args *arg);
-int start_lifetime(t_args *args);
+int init_data(int ac, char **argv, t_data *arg);
+int start_lifetime(t_data *args);
 t_ll look_at_clock(void);
+t_bool is_end(t_philo *philo);
+void life_updates(t_philo *philo, int status);
+void daily_routine(void *ptr);
+int free_all(t_philo *philo);

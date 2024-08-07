@@ -53,4 +53,21 @@ t_ll look_at_clock(void)
 	gettimeofday(&clock, NULL);
 	return(clock.tv_sec * 1000 + clock.tv_usec / 1000);
 }
-// logging life updates
+
+int free_all(t_philo *philo)
+{
+	if (philo->arg.logger_mtx)
+	{
+		pthread_mutex_destroy(philo->arg.logger_mtx);
+		free(philo->arg.logger_mtx);
+	}
+	if (philo->arg.end_mtx)
+	{
+		pthread_mutex_destroy(philo->arg.end_mtx);
+		free(philo->arg.end_mtx);
+	}
+	if (philo->end_sig)
+		free(philo->end_sig);
+	free(philo);
+	return (EXIT_SUCCESS);
+}

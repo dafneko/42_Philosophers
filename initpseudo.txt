@@ -39,3 +39,11 @@ int birth_philos(t_philo all_philos, first philo, args)
 
 
 }
+
+
+
+int pickup_fork(t_philo *philo)
+{
+	
+
+}

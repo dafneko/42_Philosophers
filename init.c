@@ -1,6 +1,6 @@
 #include "philo.h"
 
-int check_arg(int ac, char **argv, t_args *arg)
+int init_data(int ac, char **argv, t_data *arg)
 {
 	int err;
 
@@ -18,11 +18,22 @@ int check_arg(int ac, char **argv, t_args *arg)
 	if (ac == 5)
 		err |= parse_arguments(argv[5], &(arg)->left_meals);
 	if (err == TRUE)
+		return (EXIT_FAILURE);
+	arg->eat_micro = arg->time_to_eat * 1000;
+	arg->sleep_micro = arg->time_to_sleep * 1000;
+	arg->sig = malloc(sizeof(int) * 1);
+	if (arg->sig == NULL)
 		return (EXIT_FAILURE);	
+	*(arg->sig) = FALSE;
+	printf("signal = %i", *(arg->sig));
+	arg->end_mtx = malloc(sizeof(t_mutex) * 1);
+	arg->logger_mtx = malloc(sizeof(t_mutex) * 1);
+	pthread_mutex_init(arg->end_mtx, NULL);
+	pthread_mutex_init(arg->logger_mtx, NULL);
 	return (EXIT_SUCCESS);
 }
 
-int init_philo(t_philo *philo, t_args *args, int id, t_mutex *other_fork)
+int init_philo(t_philo *philo, t_data *args, int id, t_mutex *other_fork)
 {
 	// init fork
 	pthread_mutex_init(&(philo)->right_fork, NULL);	 
@@ -31,9 +42,8 @@ int init_philo(t_philo *philo, t_args *args, int id, t_mutex *other_fork)
 	philo->arg = *args;
 	philo->start_time = 0;
 	philo->last_meal_time = 0;
-	philo->end_sig = FALSE;
-	pthread_mutex_init(&philo->logger_mtx, NULL);
-	pthread_mutex_init(&philo->end_mtx, NULL);
+	philo->end_sig = args->sig;
+	// philo->end_sig = FALSE;
 	return (EXIT_SUCCESS);
 }
 
@@ -41,7 +51,7 @@ int init_philo(t_philo *philo, t_args *args, int id, t_mutex *other_fork)
 “I think God, in creating man, somewhat overestimated his ability.”
 ― Oscar Wilde
 */
-static int thus_god_created_man(t_args *args, t_philo all_philos[])
+static int thus_god_created_man(t_data *args, t_philo all_philos[])
 {
 	t_philo next_philo;
 	t_philo cur_philo;
@@ -60,6 +70,7 @@ static int thus_god_created_man(t_args *args, t_philo all_philos[])
 			cur_philo.left_fork = &next_philo.right_fork;
 		}
 		all_philos[idx] = cur_philo;
+		daily_routine(&cur_philo);
 		cur_philo = next_philo;
 	}
 	return (EXIT_SUCCESS);
@@ -72,7 +83,7 @@ static int thus_god_created_man(t_args *args, t_philo all_philos[])
 “Yes, man is mortal, but that would be only half the trouble. The worst of it is that he's sometimes unexpectedly mortal—there's the trick!”
 ― Mikhail Bulgakov, The Master and Margarita
 */
-int start_lifetime(t_args *args)
+int start_lifetime(t_data *args)
 {
 	t_philo *all_philos;
 	printf("philo count = %i\n", args->philo_count);
@@ -88,7 +99,8 @@ int start_lifetime(t_args *args)
 	//grim reaper
 	//free and destroy
 	// return to main
-	free(all_philos);
+	free_all(all_philos);
+	// free(all_philos);
 	return (EXIT_SUCCESS);
 
 }
