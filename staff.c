@@ -28,11 +28,11 @@ int grim_reaper(t_philo *all_philos)
 		if (detect_death(&all_philos[idx]))
 		{
 			//log
-			// pthread_mutex_lock(all_philos[idx].arg.end_mtx);
+			pthread_mutex_lock(all_philos[idx].arg.end_mtx);
 			*(all_philos[idx].end_sig) = DEAD;
 			life_updates(&all_philos[idx], DEAD);
 			break;
-			// pthread_mutex_unlock(all_philos[idx].arg.end_mtx);
+			pthread_mutex_unlock(all_philos[idx].arg.end_mtx);
 		}
 	}
 	return (EXIT_SUCCESS);
@@ -43,10 +43,10 @@ t_bool is_end(t_philo *philo)
 	t_bool end_val;
 	
 	end_val = FALSE;
-	// pthread_mutex_lock(philo->arg.end_mtx);
+	pthread_mutex_lock(philo->arg.end_mtx);
 	if (*(philo->end_sig))
 		end_val = TRUE;
-	// pthread_mutex_unlock(philo->arg.end_mtx);
+	pthread_mutex_unlock(philo->arg.end_mtx);
 	if (!philo->arg.left_meals)
 		end_val = TRUE;
 	return (end_val);
@@ -55,7 +55,7 @@ t_bool is_end(t_philo *philo)
 void life_updates(t_philo *philo, int status)
 {
 	int current_time;
-	// pthread_mutex_lock(philo->arg.end_mtx);
+	pthread_mutex_lock(philo->arg.end_mtx);
 	current_time = look_at_clock();
 	if (status == THINK)
 	{
@@ -73,5 +73,5 @@ void life_updates(t_philo *philo, int status)
 	{
 		printf("%i %i died\n", current_time, philo->id);
 	}
-	// pthread_mutex_unlock(philo->arg.end_mtx);
+	pthread_mutex_unlock(philo->arg.end_mtx);
 }

@@ -68,5 +68,6 @@ int start_lifetime(t_data *args);
 t_ll look_at_clock(void);
 t_bool is_end(t_philo *philo);
 void life_updates(t_philo *philo, int status);
-void daily_routine(void *ptr);
+void *daily_routine(void *ptr);
 int free_all(t_philo *philo);
+int grim_reaper(t_philo *all_philos);

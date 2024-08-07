@@ -37,11 +37,11 @@ int ithink_therefore_iam(t_philo *philo)
 
 int have_a_feast(t_philo *philo, int dom_hand)
 {
-	// pickup_fork(philo, dom_hand);
+	pickup_fork(philo, dom_hand);
 	(void)dom_hand;
 	life_updates(philo, EAT);
 	usleep(philo->arg.eat_micro);
-	// put_down_fork(philo, dom_hand);
+	put_down_fork(philo, dom_hand);
 	return (EXIT_SUCCESS);
 }
 
@@ -53,7 +53,7 @@ int rest(t_philo *philo)
 	return (EXIT_SUCCESS);
 }
 
-void daily_routine(void *ptr)
+void *daily_routine(void *ptr)
 {
 	t_philo *philo;
 
@@ -78,4 +78,5 @@ void daily_routine(void *ptr)
 	//think
 	//eat
 	//sleep
+	return (EXIT_SUCCESS);
 }

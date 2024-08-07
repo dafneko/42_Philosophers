@@ -53,10 +53,14 @@ int init_philo(t_philo *philo, t_data *args, int id, t_mutex *other_fork)
 */
 static int thus_god_created_man(t_data *args, t_philo all_philos[])
 {
+	pthread_t *philo_th;
 	t_philo next_philo;
 	t_philo cur_philo;
 	int idx;
 
+	philo_th = malloc(sizeof(pthread_t) * args->philo_count);
+	if (philo_th == NULL)
+		return (EXIT_FAILURE);	
 	init_philo(&cur_philo, args, 0, NULL);
 	all_philos[0] = cur_philo;
 	idx = -1;
@@ -70,6 +74,7 @@ static int thus_god_created_man(t_data *args, t_philo all_philos[])
 			cur_philo.left_fork = &next_philo.right_fork;
 		}
 		all_philos[idx] = cur_philo;
+		pthread_create(philo_th + idx, NULL, daily_routine, all_philos + idx);
 		daily_routine(&cur_philo);
 		cur_philo = next_philo;
 	}
@@ -99,6 +104,7 @@ int start_lifetime(t_data *args)
 	//grim reaper
 	//free and destroy
 	// return to main
+	grim_reaper(all_philos);
 	free_all(all_philos);
 	// free(all_philos);
 	return (EXIT_SUCCESS);

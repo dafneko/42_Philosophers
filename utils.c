@@ -68,6 +68,10 @@ int free_all(t_philo *philo)
 	}
 	if (philo->end_sig)
 		free(philo->end_sig);
+	// if (philo->left_fork)
+	// 	pthread_mutex_destroy(philo->left_fork);
+	// pthread_mutex_destroy(&philo->right_fork);
+	
 	free(philo);
 	return (EXIT_SUCCESS);
 }
