@@ -25,25 +25,25 @@ int init_data(int ac, char **argv, t_data *arg)
 	if (arg->sig == NULL)
 		return (EXIT_FAILURE);	
 	*(arg->sig) = FALSE;
-	printf("signal = %i", *(arg->sig));
 	arg->end_mtx = malloc(sizeof(t_mutex) * 1);
 	arg->logger_mtx = malloc(sizeof(t_mutex) * 1);
+	arg->meal_mtx = malloc(sizeof(t_mutex) * 1);
 	pthread_mutex_init(arg->end_mtx, NULL);
 	pthread_mutex_init(arg->logger_mtx, NULL);
+	pthread_mutex_init(arg->meal_mtx, NULL);
 	return (EXIT_SUCCESS);
 }
 
 int init_philo(t_philo *philo, t_data *args, int id, t_mutex *other_fork)
 {
-	// init fork
-	pthread_mutex_init(&(philo)->right_fork, NULL);	 
+	philo->right_fork = malloc(sizeof(t_mutex) * 1);
+	pthread_mutex_init(philo->right_fork, NULL);
 	philo->left_fork = other_fork;
 	philo->id = id;
 	philo->arg = *args;
 	philo->start_time = 0;
 	philo->last_meal_time = 0;
 	philo->end_sig = args->sig;
-	// philo->end_sig = FALSE;
 	return (EXIT_SUCCESS);
 }
 
@@ -54,30 +54,37 @@ int init_philo(t_philo *philo, t_data *args, int id, t_mutex *other_fork)
 static int thus_god_created_man(t_data *args, t_philo all_philos[])
 {
 	pthread_t *philo_th;
-	t_philo next_philo;
-	t_philo cur_philo;
+	t_philo *next_philo;
+	t_philo *cur_philo;
 	int idx;
 
 	philo_th = malloc(sizeof(pthread_t) * args->philo_count);
 	if (philo_th == NULL)
 		return (EXIT_FAILURE);	
-	init_philo(&cur_philo, args, 0, NULL);
-	all_philos[0] = cur_philo;
+	cur_philo = all_philos + 0;
+	init_philo(cur_philo, args, 0, NULL);
+	idx = -1;
+	while (++idx < args->philo_count - 1)
+	{
+		next_philo = all_philos + idx + 1;
+		if ((idx + 1) == args->philo_count - 1)
+			init_philo(next_philo, args, idx + 1, all_philos[0].right_fork);
+		else
+		{
+			init_philo(next_philo, args, idx + 1, NULL);
+		}
+		cur_philo->left_fork = next_philo->right_fork;
+		cur_philo = next_philo;
+	}
 	idx = -1;
 	while (++idx < args->philo_count)
 	{
-		if ((idx + 1) == args->philo_count)
-			init_philo(&next_philo, args, idx + 1, &all_philos[0].right_fork);
-		else
-		{
-			init_philo(&next_philo, args, idx + 1, NULL);
-			cur_philo.left_fork = &next_philo.right_fork;
-		}
-		all_philos[idx] = cur_philo;
 		pthread_create(philo_th + idx, NULL, daily_routine, all_philos + idx);
-		daily_routine(&cur_philo);
-		cur_philo = next_philo;
 	}
+	grim_reaper(all_philos);
+	idx = -1;
+	while (++idx < args->philo_count)
+		pthread_join(philo_th[idx], NULL);
 	return (EXIT_SUCCESS);
 }
 /* thus god created man in his own image, philosophers created god in theirs*/
@@ -91,21 +98,20 @@ static int thus_god_created_man(t_data *args, t_philo all_philos[])
 int start_lifetime(t_data *args)
 {
 	t_philo *all_philos;
-	printf("philo count = %i\n", args->philo_count);
 
-	all_philos = malloc(sizeof(t_philo) * args->philo_count + 1);
+	all_philos = malloc(sizeof(t_philo) * args->philo_count);
 	if (all_philos == NULL)
 		return (EXIT_FAILURE);
 	memset(all_philos, 0, args->philo_count);
 	thus_god_created_man(args, all_philos);
-	int idx = -1;
-	while (++idx < args->philo_count)
-		printf("philo id = %i\n", all_philos[idx].id);
+	// int idx = -1;
+	// while (++idx < args->philo_count)
+	// 	printf("philo id = %i\n", all_philos[idx].id);
 	//grim reaper
 	//free and destroy
 	// return to main
-	grim_reaper(all_philos);
-	free_all(all_philos);
+	// grim_reaper(all_philos);
+	// free_all(all_philos);
 	// free(all_philos);
 	return (EXIT_SUCCESS);
 

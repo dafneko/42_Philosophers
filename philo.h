@@ -15,9 +15,6 @@
 #define EAT 3
 #define SLEEP 4
 
-#define RIGHTIE 0
-#define LEFTIE 1
-
 typedef long long t_ll;
 typedef pthread_mutex_t t_mutex;
 
@@ -46,6 +43,7 @@ typedef struct s_data
 	t_ll sleep_micro;
 	t_mutex *logger_mtx;
 	t_mutex *end_mtx;
+	t_mutex *meal_mtx;
 	int *sig;
 } t_data;
 
@@ -53,7 +51,7 @@ typedef struct s_philo
 {
     t_ll start_time;       // 8 bytes
     t_ll last_meal_time;     // 8 bytes
-    t_mutex right_fork;   // 8 bytes on 64-bit systems
+    t_mutex *right_fork;   // 8 bytes on 64-bit systems
     t_mutex *left_fork;    // 8 bytes on 64-bit systems
     t_data arg;            // 20 bytes
     int id;                // 4 bytes

@@ -11,10 +11,12 @@ t_bool detect_death(t_philo *philo)
 	
 	end_val = FALSE;
 	cur_time = look_at_clock();
+	pthread_mutex_lock(philo->arg.meal_mtx);
 	if (cur_time - philo->last_meal_time >= philo->arg.time_to_die)
 	{
 		end_val = TRUE;
 	}
+	pthread_mutex_unlock(philo->arg.meal_mtx);
 	return(end_val);
 }
 
@@ -23,17 +25,20 @@ int grim_reaper(t_philo *all_philos)
 	int idx;
 
 	idx = -1;
-	while (++idx < all_philos->arg.philo_count)
+	while (42)
 	{
-		if (detect_death(&all_philos[idx]))
+		while (++idx < all_philos->arg.philo_count)
 		{
-			//log
-			pthread_mutex_lock(all_philos[idx].arg.end_mtx);
-			*(all_philos[idx].end_sig) = DEAD;
-			life_updates(&all_philos[idx], DEAD);
-			break;
-			pthread_mutex_unlock(all_philos[idx].arg.end_mtx);
+			if (detect_death(all_philos + idx))
+			{
+				pthread_mutex_lock(all_philos[idx].arg.end_mtx);
+				*(all_philos[idx].end_sig) = DEAD;
+				pthread_mutex_unlock(all_philos[idx].arg.end_mtx);
+				life_updates(all_philos + idx, DEAD);
+				break;
+			}
 		}
+		usleep(500000);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -55,7 +60,7 @@ t_bool is_end(t_philo *philo)
 void life_updates(t_philo *philo, int status)
 {
 	int current_time;
-	pthread_mutex_lock(philo->arg.end_mtx);
+	pthread_mutex_lock(philo->arg.logger_mtx);
 	current_time = look_at_clock();
 	if (status == THINK)
 	{
@@ -73,5 +78,5 @@ void life_updates(t_philo *philo, int status)
 	{
 		printf("%i %i died\n", current_time, philo->id);
 	}
-	pthread_mutex_unlock(philo->arg.end_mtx);
+	pthread_mutex_unlock(philo->arg.logger_mtx);
 }
