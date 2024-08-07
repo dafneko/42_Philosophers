@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:29 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/08 00:10:29 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/08 00:59:44 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	grim_reaper(t_philo *all_philos)
 		idx = -1;
 		while (++idx < all_philos->arg.philo_count)
 		{
-			if (detect_death(all_philos + idx))
+			if (detect_death(all_philos + idx) && all_philos[idx].arg.left_meals != 0)
 			{
 				pthread_mutex_lock(all_philos[idx].arg.end_mtx);
 				*(all_philos[idx].end_sig) = DEAD;
@@ -54,11 +54,11 @@ int	grim_reaper(t_philo *all_philos)
 			}
 			pthread_mutex_lock(all_philos[idx].arg.meal_num_mtx);
 			if (all_philos[idx].arg.left_meals == 0 && full++)
-			{
-				pthread_mutex_unlock(all_philos[idx].arg.meal_num_mtx);
 				if (full == all_philos[idx].arg.philo_count - 1)
+				{
+					pthread_mutex_unlock(all_philos[idx].arg.meal_num_mtx);
 					return (EXIT_SUCCESS);
-			}
+				}
 			pthread_mutex_unlock(all_philos[idx].arg.meal_num_mtx);
 		}
 		usleep(500000);
@@ -87,7 +87,7 @@ void	life_updates(t_philo *philo, int status)
 	current_time = look_at_clock();
 	pthread_mutex_lock(philo->arg.logger_mtx);
 	pthread_mutex_lock(philo->arg.end_mtx);
-	if (*(philo->end_sig) == DEAD || status == DEAD)
+	if (status == DEAD)
 	{
 		printf("%i %i died\n", current_time, philo->id);
 		pthread_mutex_unlock(philo->arg.end_mtx);
@@ -95,17 +95,20 @@ void	life_updates(t_philo *philo, int status)
 		return ;
 	}
 	pthread_mutex_unlock(philo->arg.end_mtx);
-	if (status == THINK)
+	if (!is_end(philo))
 	{
-		printf("%i %i is thinking\n", current_time, philo->id);
-	}
-	else if (status == EAT)
-	{
-		printf("%i %i is eating\n", current_time, philo->id);
-	}
-	else if (status == SLEEP)
-	{
-		printf("%i %i is sleeping\n", current_time, philo->id);
+		if (status == THINK)
+		{
+			printf("%i %i is thinking\n", current_time, philo->id);
+		}
+		else if (status == EAT)
+		{
+			printf("%i %i is eating\n", current_time, philo->id);
+		}
+		else if (status == SLEEP)
+		{
+			printf("%i %i is sleeping\n", current_time, philo->id);
+		}
 	}
 	pthread_mutex_unlock(philo->arg.logger_mtx);
 }

@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:32 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/07 23:58:33 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/08 00:54:20 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	put_down_fork(t_philo *philo)
 int	ithink_therefore_iam(t_philo *philo)
 {
 	life_updates(philo, THINK);
-	usleep(philo->arg.eat_micro / 2);
+	usleep(philo->arg.time_to_eat / 4);
 	return (EXIT_SUCCESS);
 }
 
