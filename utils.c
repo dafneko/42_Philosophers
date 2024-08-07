@@ -1,10 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/07 23:58:37 by dkoca             #+#    #+#             */
+/*   Updated: 2024/08/08 00:06:23 by dkoca            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-// argument checks
-
-static int len_check(char *str)
+static int	len_check(char *str)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (*str)
@@ -14,23 +24,23 @@ static int len_check(char *str)
 		if (len > INT_MAX_LEN)
 			return (ERROR);
 	}
-	return (len);	
+	return (len);
 }
 
-static int is_digit(int c)
+static int	is_digit(int c)
 {
 	return ('0' <= c && '9' >= c);
 }
 
-int parse_arguments(char *str, int *ms)
+int	parse_arguments(char *str, int *ms)
 {
-	int nbr;
-	int idx;
+	int	nbr;
+	int	idx;
 
 	idx = 0;
 	nbr = 0;
 	if (len_check(str) == ERROR)
-			return (EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	if (str[idx] == '+')
 		idx++;
 	while (str[idx])
@@ -45,33 +55,10 @@ int parse_arguments(char *str, int *ms)
 	return (EXIT_SUCCESS);
 }
 
-
-t_ll look_at_clock(void)
+t_ll	look_at_clock(void)
 {
-	struct timeval clock;
+	struct timeval	clock;
 
 	gettimeofday(&clock, NULL);
-	return(clock.tv_sec * 1000 + clock.tv_usec / 1000);
-}
-
-int free_all(t_philo *philo)
-{
-	if (philo->arg.logger_mtx)
-	{
-		pthread_mutex_destroy(philo->arg.logger_mtx);
-		free(philo->arg.logger_mtx);
-	}
-	if (philo->arg.end_mtx)
-	{
-		pthread_mutex_destroy(philo->arg.end_mtx);
-		free(philo->arg.end_mtx);
-	}
-	if (philo->end_sig)
-		free(philo->end_sig);
-	// if (philo->left_fork)
-	// 	pthread_mutex_destroy(philo->left_fork);
-	// pthread_mutex_destroy(&philo->right_fork);
-	
-	free(philo);
-	return (EXIT_SUCCESS);
+	return (clock.tv_sec * 1000 + clock.tv_usec / 1000);
 }

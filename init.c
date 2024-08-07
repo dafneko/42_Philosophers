@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/07 23:58:26 by dkoca             #+#    #+#             */
+/*   Updated: 2024/08/07 23:58:27 by dkoca            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-int init_data(int ac, char **argv, t_data *arg)
+int	init_data(int ac, char **argv, t_data *arg)
 {
-	int err;
+	int	err;
 
 	if ((ac < 5 || ac > 6))
 		return (EXIT_FAILURE);
@@ -23,18 +35,20 @@ int init_data(int ac, char **argv, t_data *arg)
 	arg->sleep_micro = arg->time_to_sleep * 1000;
 	arg->sig = malloc(sizeof(int) * 1);
 	if (arg->sig == NULL)
-		return (EXIT_FAILURE);	
+		return (EXIT_FAILURE);
 	*(arg->sig) = FALSE;
 	arg->end_mtx = malloc(sizeof(t_mutex) * 1);
 	arg->logger_mtx = malloc(sizeof(t_mutex) * 1);
 	arg->meal_mtx = malloc(sizeof(t_mutex) * 1);
+	arg->meal_num_mtx = malloc(sizeof(t_mutex) * 1);
 	pthread_mutex_init(arg->end_mtx, NULL);
 	pthread_mutex_init(arg->logger_mtx, NULL);
 	pthread_mutex_init(arg->meal_mtx, NULL);
+	pthread_mutex_init(arg->meal_num_mtx, NULL);
 	return (EXIT_SUCCESS);
 }
 
-int init_philo(t_philo *philo, t_data *args, int id, t_mutex *other_fork)
+int	init_philo(t_philo *philo, t_data *args, int id, t_mutex *other_fork)
 {
 	philo->right_fork = malloc(sizeof(t_mutex) * 1);
 	pthread_mutex_init(philo->right_fork, NULL);
@@ -51,16 +65,13 @@ int init_philo(t_philo *philo, t_data *args, int id, t_mutex *other_fork)
 “I think God, in creating man, somewhat overestimated his ability.”
 ― Oscar Wilde
 */
-static int thus_god_created_man(t_data *args, t_philo all_philos[])
+int	thus_god_created_man(t_data *args, t_philo all_philos[],
+		pthread_t *philo_th)
 {
-	pthread_t *philo_th;
-	t_philo *next_philo;
-	t_philo *cur_philo;
-	int idx;
+	t_philo	*next_philo;
+	t_philo	*cur_philo;
+	int		idx;
 
-	philo_th = malloc(sizeof(pthread_t) * args->philo_count);
-	if (philo_th == NULL)
-		return (EXIT_FAILURE);	
 	cur_philo = all_philos + 0;
 	init_philo(cur_philo, args, 0, NULL);
 	idx = -1;
@@ -70,9 +81,7 @@ static int thus_god_created_man(t_data *args, t_philo all_philos[])
 		if ((idx + 1) == args->philo_count - 1)
 			init_philo(next_philo, args, idx + 1, all_philos[0].right_fork);
 		else
-		{
 			init_philo(next_philo, args, idx + 1, NULL);
-		}
 		cur_philo->left_fork = next_philo->right_fork;
 		cur_philo = next_philo;
 	}
@@ -89,30 +98,24 @@ static int thus_god_created_man(t_data *args, t_philo all_philos[])
 }
 /* thus god created man in his own image, philosophers created god in theirs*/
 
-
-
-/* 
-“Yes, man is mortal, but that would be only half the trouble. The worst of it is that he's sometimes unexpectedly mortal—there's the trick!”
+/*
+“Yes, man is mortal,
+	but that would be only half the trouble. The worst of it is that he's sometimes unexpectedly mortal—there's the trick!”
 ― Mikhail Bulgakov, The Master and Margarita
 */
-int start_lifetime(t_data *args)
+int	start_lifetime(t_data *args)
 {
-	t_philo *all_philos;
+	t_philo		*all_philos;
+	pthread_t	*philo_th;
 
 	all_philos = malloc(sizeof(t_philo) * args->philo_count);
 	if (all_philos == NULL)
 		return (EXIT_FAILURE);
+	philo_th = malloc(sizeof(pthread_t) * args->philo_count);
+	if (philo_th == NULL)
+		return (EXIT_FAILURE);
 	memset(all_philos, 0, args->philo_count);
-	thus_god_created_man(args, all_philos);
-	// int idx = -1;
-	// while (++idx < args->philo_count)
-	// 	printf("philo id = %i\n", all_philos[idx].id);
-	//grim reaper
-	//free and destroy
-	// return to main
-	// grim_reaper(all_philos);
-	// free_all(all_philos);
-	// free(all_philos);
+	thus_god_created_man(args, all_philos, philo_th);
+	free_all(all_philos, philo_th);
 	return (EXIT_SUCCESS);
-
 }
