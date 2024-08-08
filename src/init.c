@@ -6,20 +6,14 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:26 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/07 23:58:27 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 00:37:05 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	init_data(int ac, char **argv, t_data *arg)
+int	check_args(char **argv, t_data *arg, int ac, int err)
 {
-	int	err;
-
-	if ((ac < 5 || ac > 6))
-		return (EXIT_FAILURE);
-	ac--;
-	err = FALSE;
 	err |= parse_arguments(argv[1], &(arg)->philo_count);
 	if (arg->philo_count < 1)
 		return (EXIT_FAILURE);
@@ -29,6 +23,20 @@ int	init_data(int ac, char **argv, t_data *arg)
 	arg->left_meals = -1;
 	if (ac == 5)
 		err |= parse_arguments(argv[5], &(arg)->left_meals);
+	if (err == TRUE)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
+
+int	init_data(int ac, char **argv, t_data *arg)
+{
+	int	err;
+
+	if ((ac < 5 || ac > 6))
+		return (EXIT_FAILURE);
+	ac--;
+	err = FALSE;
+	err = check_args(argv, arg, ac, err);
 	if (err == TRUE)
 		return (EXIT_FAILURE);
 	arg->eat_micro = arg->time_to_eat * 1000;
@@ -87,10 +95,8 @@ int	thus_god_created_man(t_data *args, t_philo all_philos[],
 	}
 	idx = -1;
 	while (++idx < args->philo_count)
-	{
 		pthread_create(philo_th + idx, NULL, daily_routine, all_philos + idx);
-	}
-	grim_reaper(all_philos);
+	grim_reaper(all_philos, philo_th);
 	idx = -1;
 	while (++idx < args->philo_count)
 		pthread_join(philo_th[idx], NULL);
@@ -100,7 +106,8 @@ int	thus_god_created_man(t_data *args, t_philo all_philos[],
 
 /*
 “Yes, man is mortal,
-	but that would be only half the trouble. The worst of it is that he's sometimes unexpectedly mortal—there's the trick!”
+	but that would be only half the trouble. The worst of it is that 
+	he's sometimes unexpectedly mortal—there's the trick!”
 ― Mikhail Bulgakov, The Master and Margarita
 */
 int	start_lifetime(t_data *args)

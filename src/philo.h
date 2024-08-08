@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:39 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/08 00:11:29 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 00:38:45 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 #define THINK 2
 #define EAT 3
 #define SLEEP 4
+#define FORK 5
+#define NO_FORK 6
 
 typedef long long		t_ll;
 typedef pthread_mutex_t	t_mutex;
@@ -36,12 +38,6 @@ typedef enum e_bool
 	TRUE
 }						t_bool;
 
-// typedef struct s_fork
-// {
-// 	t_mutex mutex;
-
-// };
-
 typedef struct s_data
 {
 	int					philo_count;
@@ -49,8 +45,8 @@ typedef struct s_data
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					left_meals;
-	t_ll				eat_micro;
-	t_ll				sleep_micro;
+	time_t				eat_micro;
+	time_t				sleep_micro;
 	t_mutex				*logger_mtx;
 	t_mutex				*end_mtx;
 	t_mutex				*meal_mtx;
@@ -60,8 +56,8 @@ typedef struct s_data
 
 typedef struct s_philo
 {
-	t_ll				start_time;
-	t_ll				last_meal_time;
+	time_t				start_time;
+	time_t				last_meal_time;
 	t_mutex				*right_fork;
 	t_mutex				*left_fork;
 	t_data				arg;
@@ -76,9 +72,11 @@ int						free_all(t_philo *philo, pthread_t *philo_th);
 int						start_lifetime(t_data *args);
 int						thus_god_created_man(t_data *args, t_philo all_philos[],
 							pthread_t *philo_th);
-t_ll					look_at_clock(void);
+time_t					look_at_clock(void);
 t_bool					is_end(t_philo *philo);
 void					life_updates(t_philo *philo, int status);
 void					*daily_routine(void *ptr);
 int						free_all(t_philo *philo, pthread_t *philo_th);
-int						grim_reaper(t_philo *all_philos);
+int						grim_reaper(t_philo *all_philos, pthread_t *philo_th);
+void					pickup_fork(t_philo *philo);
+void					put_down_fork(t_philo *philo);

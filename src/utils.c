@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:37 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/08 00:06:23 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/08 03:59:56 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	parse_arguments(char *str, int *ms)
 	return (EXIT_SUCCESS);
 }
 
-t_ll	look_at_clock(void)
+time_t	look_at_clock(void)
 {
 	struct timeval	clock;
 

@@ -6,44 +6,16 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:32 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/08 00:54:20 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 00:24:31 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	pickup_fork(t_philo *philo)
-{
-	if (philo->id % 2 == 0)
-	{
-		pthread_mutex_lock(philo->right_fork);
-		pthread_mutex_lock(philo->left_fork);
-	}
-	else
-	{
-		pthread_mutex_lock(philo->left_fork);
-		pthread_mutex_lock(philo->right_fork);
-	}
-}
-
-void	put_down_fork(t_philo *philo)
-{
-	if (philo->id % 2 == 0)
-	{
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_unlock(philo->left_fork);
-	}
-	else
-	{
-		pthread_mutex_unlock(philo->left_fork);
-		pthread_mutex_unlock(philo->right_fork);
-	}
-}
-
 int	ithink_therefore_iam(t_philo *philo)
 {
 	life_updates(philo, THINK);
-	usleep(philo->arg.time_to_eat / 4);
+	usleep(500);
 	return (EXIT_SUCCESS);
 }
 
@@ -54,10 +26,10 @@ int	have_a_feast(t_philo *philo)
 	philo->last_meal_time = look_at_clock();
 	pthread_mutex_unlock(philo->arg.meal_mtx);
 	life_updates(philo, EAT);
-	usleep(philo->arg.eat_micro);
 	pthread_mutex_lock(philo->arg.meal_num_mtx);
 	philo->arg.left_meals--;
 	pthread_mutex_unlock(philo->arg.meal_num_mtx);
+	usleep(philo->arg.eat_micro);
 	put_down_fork(philo);
 	return (EXIT_SUCCESS);
 }
@@ -71,7 +43,7 @@ int	rest(t_philo *philo)
 
 void	*daily_routine(void *ptr)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
 	philo->start_time = look_at_clock();
