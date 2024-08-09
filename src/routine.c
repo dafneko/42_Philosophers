@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:32 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/09 00:24:31 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 02:15:57 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int	ithink_therefore_iam(t_philo *philo)
 {
 	life_updates(philo, THINK);
+	// if (philo->arg.time_to_die > look_at_clock() - philo->last_meal_time + philo->arg.time_to_eat + philo->arg.time_to_sleep)
+		// usleep(philo->arg.time_to_eat);
 	usleep(500);
 	return (EXIT_SUCCESS);
 }
@@ -45,11 +47,13 @@ void	*daily_routine(void *ptr)
 {
 	t_philo	*philo;
 
-	philo = (t_philo *)ptr;
-	philo->start_time = look_at_clock();
+	philo = (t_philo *)ptr;	
 	pthread_mutex_lock(philo->arg.meal_mtx);
-	philo->last_meal_time = philo->start_time;
+	pthread_mutex_lock(philo->arg.time_mtx);
+	philo->last_meal_time = *philo->start_time;
+	pthread_mutex_unlock(philo->arg.time_mtx);
 	pthread_mutex_unlock(philo->arg.meal_mtx);
+	wait_for_others(philo);
 	while (!is_end(philo))
 	{
 		ithink_therefore_iam(philo);

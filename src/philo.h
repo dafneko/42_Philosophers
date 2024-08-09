@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:39 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/09 00:38:45 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 02:16:26 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,18 @@ typedef struct s_data
 	int					left_meals;
 	time_t				eat_micro;
 	time_t				sleep_micro;
+	time_t				*sim_start;
 	t_mutex				*logger_mtx;
 	t_mutex				*end_mtx;
 	t_mutex				*meal_mtx;
 	t_mutex				*meal_num_mtx;
+	t_mutex				*time_mtx;
 	int					*sig;
 }						t_data;
 
 typedef struct s_philo
 {
-	time_t				start_time;
+	time_t				*start_time;
 	time_t				last_meal_time;
 	t_mutex				*right_fork;
 	t_mutex				*left_fork;
@@ -80,3 +82,4 @@ int						free_all(t_philo *philo, pthread_t *philo_th);
 int						grim_reaper(t_philo *all_philos, pthread_t *philo_th);
 void					pickup_fork(t_philo *philo);
 void					put_down_fork(t_philo *philo);
+void					wait_for_others(t_philo *philo);

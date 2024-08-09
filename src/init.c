@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:26 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/09 00:37:05 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 02:16:16 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	check_args(char **argv, t_data *arg, int ac, int err)
 
 int	init_data(int ac, char **argv, t_data *arg)
 {
-	int	err;
+	int				err;
 
 	if ((ac < 5 || ac > 6))
 		return (EXIT_FAILURE);
@@ -49,10 +49,12 @@ int	init_data(int ac, char **argv, t_data *arg)
 	arg->logger_mtx = malloc(sizeof(t_mutex) * 1);
 	arg->meal_mtx = malloc(sizeof(t_mutex) * 1);
 	arg->meal_num_mtx = malloc(sizeof(t_mutex) * 1);
+	arg->sim_start = malloc(sizeof(t_mutex) * 1);
 	pthread_mutex_init(arg->end_mtx, NULL);
 	pthread_mutex_init(arg->logger_mtx, NULL);
 	pthread_mutex_init(arg->meal_mtx, NULL);
 	pthread_mutex_init(arg->meal_num_mtx, NULL);
+	pthread_mutex_init(arg->time_mtx, NULL);
 	return (EXIT_SUCCESS);
 }
 
@@ -66,6 +68,7 @@ int	init_philo(t_philo *philo, t_data *args, int id, t_mutex *other_fork)
 	philo->start_time = 0;
 	philo->last_meal_time = 0;
 	philo->end_sig = args->sig;
+	philo->start_time = args->sim_start;
 	return (EXIT_SUCCESS);
 }
 
@@ -94,6 +97,9 @@ int	thus_god_created_man(t_data *args, t_philo all_philos[],
 		cur_philo = next_philo;
 	}
 	idx = -1;
+	pthread_mutex_lock(args->time_mtx);
+	*args->sim_start = look_at_clock();
+	pthread_mutex_unlock(args->time_mtx);
 	while (++idx < args->philo_count)
 		pthread_create(philo_th + idx, NULL, daily_routine, all_philos + idx);
 	grim_reaper(all_philos, philo_th);
