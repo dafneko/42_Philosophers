@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:29 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/09 02:52:52 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 03:14:29 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ t_bool	detect_death(t_philo *philo)
 	return (end_val);
 }
 
-int	stop_simulation(t_philo *all_philos, pthread_t *philo_th, int idx, int full)
+int	stop_simulation(t_philo *all_philos, int idx, int full)
 {
 	while (++idx < all_philos->arg.philo_count)
 	{
-		(void)philo_th;
 		pthread_mutex_lock(all_philos[idx].arg.meal_num_mtx);
-		if (detect_death(all_philos + idx) && all_philos[idx].arg.left_meals != 0)
+		if (detect_death(all_philos + idx)
+			&& all_philos[idx].arg.left_meals != 0)
 		{
 			pthread_mutex_unlock(all_philos[idx].arg.meal_num_mtx);
 			pthread_mutex_lock(all_philos[idx].arg.end_mtx);
@@ -61,20 +61,24 @@ int	stop_simulation(t_philo *all_philos, pthread_t *philo_th, int idx, int full)
 	return (EXIT_FAILURE);
 }
 
-int	grim_reaper(t_philo *all_philos, pthread_t *philo_th)
+int	grim_reaper(t_philo *all_philos)
 {
 	int	idx;
 	int	full;
 
+	pthread_mutex_lock(all_philos->arg.meal_num_mtx);
 	if (all_philos->arg.left_meals == 0)
+	{
+		pthread_mutex_unlock(all_philos->arg.meal_num_mtx);
 		return (EXIT_SUCCESS);
+	}
+	pthread_mutex_unlock(all_philos->arg.meal_num_mtx);
 	while (42)
 	{
 		full = 0;
 		idx = -1;
 		usleep(500);
-		if (stop_simulation(all_philos, philo_th, idx,
-				full) == EXIT_SUCCESS)
+		if (stop_simulation(all_philos, idx, full) == EXIT_SUCCESS)
 			return (EXIT_SUCCESS);
 	}
 	return (EXIT_SUCCESS);

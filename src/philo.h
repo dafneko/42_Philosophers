@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:39 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/09 02:16:26 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 03:12:07 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ typedef struct s_data
 	t_mutex				*end_mtx;
 	t_mutex				*meal_mtx;
 	t_mutex				*meal_num_mtx;
-	t_mutex				*time_mtx;
 	int					*sig;
 }						t_data;
 
@@ -79,7 +78,7 @@ t_bool					is_end(t_philo *philo);
 void					life_updates(t_philo *philo, int status);
 void					*daily_routine(void *ptr);
 int						free_all(t_philo *philo, pthread_t *philo_th);
-int						grim_reaper(t_philo *all_philos, pthread_t *philo_th);
+int						grim_reaper(t_philo *all_philos);
 void					pickup_fork(t_philo *philo);
 void					put_down_fork(t_philo *philo);
 void					wait_for_others(t_philo *philo);

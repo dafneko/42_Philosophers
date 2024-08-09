@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:26 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/09 02:16:16 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 03:13:37 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	check_args(char **argv, t_data *arg, int ac, int err)
 
 int	init_data(int ac, char **argv, t_data *arg)
 {
-	int				err;
+	int	err;
 
 	if ((ac < 5 || ac > 6))
 		return (EXIT_FAILURE);
@@ -54,7 +54,6 @@ int	init_data(int ac, char **argv, t_data *arg)
 	pthread_mutex_init(arg->logger_mtx, NULL);
 	pthread_mutex_init(arg->meal_mtx, NULL);
 	pthread_mutex_init(arg->meal_num_mtx, NULL);
-	pthread_mutex_init(arg->time_mtx, NULL);
 	return (EXIT_SUCCESS);
 }
 
@@ -97,22 +96,16 @@ int	thus_god_created_man(t_data *args, t_philo all_philos[],
 		cur_philo = next_philo;
 	}
 	idx = -1;
-	pthread_mutex_lock(args->time_mtx);
 	*args->sim_start = look_at_clock();
-	pthread_mutex_unlock(args->time_mtx);
 	while (++idx < args->philo_count)
 		pthread_create(philo_th + idx, NULL, daily_routine, all_philos + idx);
-	grim_reaper(all_philos, philo_th);
-	idx = -1;
-	while (++idx < args->philo_count)
-		pthread_join(philo_th[idx], NULL);
 	return (EXIT_SUCCESS);
 }
 /* thus god created man in his own image, philosophers created god in theirs*/
 
 /*
 “Yes, man is mortal,
-	but that would be only half the trouble. The worst of it is that 
+	but that would be only half the trouble. The worst of it is that
 	he's sometimes unexpectedly mortal—there's the trick!”
 ― Mikhail Bulgakov, The Master and Margarita
 */
@@ -120,6 +113,7 @@ int	start_lifetime(t_data *args)
 {
 	t_philo		*all_philos;
 	pthread_t	*philo_th;
+	int			idx;
 
 	all_philos = malloc(sizeof(t_philo) * args->philo_count);
 	if (all_philos == NULL)
@@ -129,6 +123,10 @@ int	start_lifetime(t_data *args)
 		return (EXIT_FAILURE);
 	memset(all_philos, 0, args->philo_count);
 	thus_god_created_man(args, all_philos, philo_th);
+	grim_reaper(all_philos);
+	idx = -1;
+	while (++idx < args->philo_count)
+		pthread_join(philo_th[idx], NULL);
 	free_all(all_philos, philo_th);
 	return (EXIT_SUCCESS);
 }
