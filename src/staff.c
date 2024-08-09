@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:29 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/09 02:51:58 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 02:52:52 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,9 @@ int	stop_simulation(t_philo *all_philos, pthread_t *philo_th, int idx, int full)
 		pthread_mutex_lock(all_philos[idx].arg.meal_num_mtx);
 		if (all_philos[idx].arg.left_meals == 0 && full++)
 		{
-			// printf("%i is full\n", all_philos[idx])
 			if (full == all_philos[idx].arg.philo_count - 1)
 			{
 				pthread_mutex_unlock(all_philos[idx].arg.meal_num_mtx);
-				// pthread_detach(philo_th[idx]);
 				return (EXIT_SUCCESS);
 			}
 		}

@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:32 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/09 02:15:57 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/09 02:59:22 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	*daily_routine(void *ptr)
 	philo->last_meal_time = *philo->start_time;
 	pthread_mutex_unlock(philo->arg.time_mtx);
 	pthread_mutex_unlock(philo->arg.meal_mtx);
-	wait_for_others(philo);
+	// wait_for_others(philo);
 	while (!is_end(philo))
 	{
 		ithink_therefore_iam(philo);
