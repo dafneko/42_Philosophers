@@ -6,14 +6,14 @@
 #    By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/12 01:06:15 by dkoca             #+#    #+#              #
-#    Updated: 2024/08/08 23:43:02 by dkoca            ###   ########.fr        #
+#    Updated: 2024/08/21 00:57:53 by dkoca            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME := philo
 
 SRCDIR := src
-_SRC := main.c init.c routine.c staff.c utils.c table_manners.c liberty.c
+_SRC := main.c init.c routine.c staff.c start.c utils.c table_manners.c liberty.c
 SRC := $(addprefix $(SRCDIR)/, $(_SRC))
 
 OBJDIR := obj

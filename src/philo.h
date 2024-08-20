@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:39 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/09 03:12:07 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/21 00:58:31 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,3 +82,5 @@ int						grim_reaper(t_philo *all_philos);
 void					pickup_fork(t_philo *philo);
 void					put_down_fork(t_philo *philo);
 void					wait_for_others(t_philo *philo);
+void 					safe_free(t_data *arg);
+int						init_philo(t_philo *philo, t_data *args, int id, t_mutex *other_fork);

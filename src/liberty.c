@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 00:06:07 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/09 03:16:55 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/21 00:55:20 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,18 @@ int	free_all(t_philo *philo, pthread_t *philo_th)
 	free(philo);
 	free(philo_th);
 	return (EXIT_SUCCESS);
+}
+
+void safe_free(t_data *arg)
+{
+	if (arg->end_mtx)
+		free(arg->end_mtx);
+	if (arg->logger_mtx)
+		free(arg->logger_mtx);
+	if (arg->meal_mtx)
+		free(arg->meal_mtx);
+	if (arg->meal_num_mtx)
+		free(arg->meal_mtx);
+	if (arg->sim_start)
+		free(arg->sim_start);
 }
