@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 23:58:26 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/21 01:00:02 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/21 03:36:21 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_args(char **argv, t_data *arg, int ac, int err)
 	return (EXIT_SUCCESS);
 }
 
-int _init_mtx(t_data *arg)
+int init_mtx(t_data *arg)
 {
 	arg->end_mtx = malloc(sizeof(t_mutex) * 1);
 	if (!arg->end_mtx)
@@ -73,7 +73,7 @@ int	init_data(int ac, char **argv, t_data *arg)
 	if (arg->sig == NULL)
 		return (EXIT_FAILURE);
 	*(arg->sig) = FALSE;
-	if (_init_mtx(arg) == EXIT_FAILURE)
+	if (init_mtx(arg) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
