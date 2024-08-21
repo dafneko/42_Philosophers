@@ -28,7 +28,7 @@ int	check_args(char **argv, t_data *arg, int ac, int err)
 	return (EXIT_SUCCESS);
 }
 
-int init_mtx(t_data *arg)
+int	init_mtx(t_data *arg)
 {
 	arg->end_mtx = malloc(sizeof(t_mutex) * 1);
 	if (!arg->end_mtx)

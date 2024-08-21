@@ -59,7 +59,7 @@ int	free_all(t_philo *philo, pthread_t *philo_th)
 	return (EXIT_SUCCESS);
 }
 
-void safe_free(t_data *arg)
+void	safe_free(t_data *arg)
 {
 	if (arg->end_mtx)
 		free(arg->end_mtx);

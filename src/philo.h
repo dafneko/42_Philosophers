@@ -82,5 +82,6 @@ int						grim_reaper(t_philo *all_philos);
 void					pickup_fork(t_philo *philo);
 void					put_down_fork(t_philo *philo);
 void					wait_for_others(t_philo *philo);
-void 					safe_free(t_data *arg);
-int						init_philo(t_philo *philo, t_data *args, int id, t_mutex *other_fork);
+void					safe_free(t_data *arg);
+int						init_philo(t_philo *philo, t_data *args, int id,
+							t_mutex *other_fork);
