@@ -6,7 +6,7 @@
 /*   By: dkoca <dkoca@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 00:06:07 by dkoca             #+#    #+#             */
-/*   Updated: 2024/08/21 04:03:57 by dkoca            ###   ########.fr       */
+/*   Updated: 2024/08/22 09:52:03 by dkoca            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,25 @@ int	free_all(t_philo *philo, pthread_t *philo_th)
 void	safe_free(t_data *arg)
 {
 	if (arg->end_mtx)
+	{
+		pthread_mutex_destroy(arg->end_mtx);
 		free(arg->end_mtx);
+	}
 	if (arg->logger_mtx)
+	{
+		pthread_mutex_destroy(arg->logger_mtx);
 		free(arg->logger_mtx);
+	}
 	if (arg->meal_mtx)
+	{
+		pthread_mutex_destroy(arg->meal_mtx);
 		free(arg->meal_mtx);
+	}
 	if (arg->meal_num_mtx)
-		free(arg->meal_mtx);
+	{
+		pthread_mutex_destroy(arg->meal_num_mtx);
+		free(arg->meal_num_mtx);
+	}
 	if (arg->sim_start)
 		free(arg->sim_start);
 }
